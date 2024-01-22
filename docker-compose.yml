@@ -12,6 +12,8 @@ services:
       - '5432:5432'
     volumes:
       - ./data:/var/lib/postgresql/data
+
+
   pgadmin:
     image: dpage/pgadmin4
     restart: always
@@ -21,4 +23,6 @@ services:
     ports:
       - '15432:80'
     depends_on:
-    - db
+      - db
+
+
