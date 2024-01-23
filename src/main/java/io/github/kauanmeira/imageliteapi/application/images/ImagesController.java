@@ -1,6 +1,8 @@
 package io.github.kauanmeira.imageliteapi.application.images;
 
+import io.github.kauanmeira.imageliteapi.application.images.dto.ImageDTO;
 import io.github.kauanmeira.imageliteapi.domain.entity.Image;
+import io.github.kauanmeira.imageliteapi.domain.enums.ImageExtension;
 import io.github.kauanmeira.imageliteapi.domain.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/images")
@@ -46,16 +49,27 @@ public class ImagesController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(image.getExtension().getMediaType());
         headers.setContentLength(image.getSize());
-        headers.setContentDispositionFormData("inline; filename=\"" +image.getFileName() + "\"", image.getFileName());
+        headers.setContentDispositionFormData("inline; filename=\"" + image.getFileName() + "\"", image.getFileName());
 
         return new ResponseEntity<>(image.getFile(), headers, HttpStatus.OK);
+    }
 
+    @GetMapping
+    public ResponseEntity<List<ImageDTO>> search(
+            @RequestParam(value = "extension", required = false, defaultValue = "") String extension,
+            @RequestParam(value = "query", required = false) String query) {
 
+        var result = service.search(ImageExtension.ofName(extension), query);
+        var images = result.stream().map(image -> {
+            var url = buildImageURL(image);
+            return mapper.domainToDTO(image, url.toString());
+        }).collect(Collectors.toList());
+        return ResponseEntity.ok(images);
     }
 
     private URI buildImageURL(Image image) {
         String imagePath = "/" + image.getId();
-        return ServletUriComponentsBuilder.fromCurrentRequest().path(imagePath).build().toUri();
+        return ServletUriComponentsBuilder.fromCurrentRequestUri().path(imagePath).build().toUri();
 
     }
 }
