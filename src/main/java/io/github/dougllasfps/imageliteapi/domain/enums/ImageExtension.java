@@ -1,9 +1,26 @@
 package io.github.dougllasfps.imageliteapi.domain.enums;
 
+import org.springframework.http.MediaType;
+
+import javax.print.attribute.standard.Media;
+import java.util.Arrays;
+
 public enum ImageExtension {
-    PNG,
-    JPG,
-    GIF,
-    JPEG,
-    PDF
+    PNG(MediaType.IMAGE_PNG),
+    GIF(MediaType.IMAGE_GIF),
+    JPEG(MediaType.IMAGE_JPEG),
+    PDF(MediaType.APPLICATION_PDF);
+
+    private MediaType mediaType;
+
+    ImageExtension(MediaType mediaType) {
+        this.mediaType = mediaType;
+    }
+
+    public static ImageExtension valueOf(MediaType mediaType) {
+        return Arrays.stream(values())
+                .filter(ie -> ie.mediaType.equals(mediaType))
+                .findFirst()
+                .orElse(null);
+    }
 }
