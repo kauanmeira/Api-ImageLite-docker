@@ -1,5 +1,6 @@
 package io.github.dougllasfps.imageliteapi.domain.enums;
 
+import lombok.Getter;
 import org.springframework.http.MediaType;
 
 import javax.print.attribute.standard.Media;
@@ -11,6 +12,7 @@ public enum ImageExtension {
     JPEG(MediaType.IMAGE_JPEG),
     PDF(MediaType.APPLICATION_PDF);
 
+    @Getter
     private MediaType mediaType;
 
     ImageExtension(MediaType mediaType) {

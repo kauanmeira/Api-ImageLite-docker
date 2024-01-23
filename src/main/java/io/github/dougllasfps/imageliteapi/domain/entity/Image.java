@@ -29,7 +29,7 @@ public class Image {
     @Column
     private Long size;
     @Column
-    @Enumerated (EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private ImageExtension extension;
     @Column
     @CreatedDate
@@ -39,6 +39,10 @@ public class Image {
     @Column
     @Lob
     private byte[] file;
+
+    public String getFileName() {
+        return getName().concat(".").concat(getExtension().name());
+    }
 
 
 }
