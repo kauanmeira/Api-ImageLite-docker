@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/v1/images")
 @Slf4j
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class ImagesController {
     private final ImageService service;
     private final ImageMapper mapper;
